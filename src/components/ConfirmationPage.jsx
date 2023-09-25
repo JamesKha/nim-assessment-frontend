@@ -17,7 +17,9 @@ function ConfirmationPage() {
         const response = await fetch(`/api/orders/${id}`);
         if (response.ok) {
           const data = await response.json();
+          console.log("Received data from API:", data);
           setOrder(data);
+          
         }
       } finally {
         setIsLoading(false);
