@@ -6,9 +6,35 @@ function OrderModal({ order, setOrderModal }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    if (!phone.trim()) {
+      newErrors.phone = "Phone number is required";
+    } else if (!/^\d+$/.test(phone)) {
+      newErrors.phone = "Phone number should only contain numbers";
+    }
+
+    if (!address.trim()) {
+      newErrors.address = "Address is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const placeOrder = async () => {
+    if (!validateForm()) {
+      // If this fails, do not submit the data
+      return;
+    }
+
     try {
       const response = await fetch("/api/orders", {
         method: "POST",
@@ -25,13 +51,14 @@ function OrderModal({ order, setOrderModal }) {
 
       if (response.ok) {
         const data = await response.json();
-        // console.log("Response data:", data);
         navigate(`/order-confirmation/${data.id}`);
       } else {
-        // console.error("Failed to place the order. Please try again.");
+        // Handle error on server response
+        // For example: setError("Failed to place the order. Please try again.");
       }
     } catch (error) {
-      // console.error("An error occurred. Please try again later.");
+      // Handle network or other errors
+      // For example: setError("An error occurred. Please try again later.");
     }
   };
 
@@ -64,6 +91,7 @@ function OrderModal({ order, setOrderModal }) {
                 id="name"
               />
             </label>
+            {errors.name && <div className={styles.error}>{errors.name}</div>}
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="phone">
@@ -77,6 +105,7 @@ function OrderModal({ order, setOrderModal }) {
                 id="phone"
               />
             </label>
+            {errors.phone && <div className={styles.error}>{errors.phone}</div>}
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="address">
@@ -90,6 +119,9 @@ function OrderModal({ order, setOrderModal }) {
                 id="address"
               />
             </label>
+            {errors.address && (
+              <div className={styles.error}>{errors.address}</div> // Set the error if there is no address
+            )}
           </div>
         </form>
 
