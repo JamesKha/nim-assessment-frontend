@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useHistory
+import { useNavigate } from "react-router-dom";
 import styles from "./styles/OrderModal.module.css";
 
 function OrderModal({ order, setOrderModal }) {
@@ -11,14 +11,13 @@ function OrderModal({ order, setOrderModal }) {
 
   const validateForm = () => {
     const newErrors = {};
+
     if (!name.trim()) {
       newErrors.name = "Name is required";
     }
 
-    if (!phone.trim()) {
-      newErrors.phone = "Phone number is required";
-    } else if (!/^\d+$/.test(phone)) {
-      newErrors.phone = "Phone number should only contain numbers";
+    if (!phone.trim() || !/^[\d()-]+$/.test(phone)) {
+      newErrors.phone = "Phone number should only contain numbers, '-', or parentheses";
     }
 
     if (!address.trim()) {
@@ -62,6 +61,8 @@ function OrderModal({ order, setOrderModal }) {
     }
   };
 
+  const errorFields = Object.keys(errors);
+
   return (
     <>
       <div
@@ -90,8 +91,8 @@ function OrderModal({ order, setOrderModal }) {
                 type="text"
                 id="name"
               />
+              {errors.name && <div className={styles.error}>{errors.name}</div>}
             </label>
-            {errors.name && <div className={styles.error}>{errors.name}</div>}
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="phone">
@@ -101,11 +102,11 @@ function OrderModal({ order, setOrderModal }) {
                   e.preventDefault();
                   setPhone(e.target.value);
                 }}
-                type="phone"
+                type="text"
                 id="phone"
               />
+              {errors.phone && <div className={styles.error}>{errors.phone}</div>}
             </label>
-            {errors.phone && <div className={styles.error}>{errors.phone}</div>}
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="address">
@@ -115,16 +116,18 @@ function OrderModal({ order, setOrderModal }) {
                   e.preventDefault();
                   setAddress(e.target.value);
                 }}
-                type="phone"
+                type="text"
                 id="address"
               />
+              {errors.address && <div className={styles.error}>{errors.address}</div>}
             </label>
-            {errors.address && (
-              <div className={styles.error}>{errors.address}</div> // Set the error if there is no address
-            )}
           </div>
         </form>
-
+        {errorFields.length > 0 && (
+          <div className={styles.error}>
+            Please fix these fields: {errorFields.join(", ")}
+          </div>
+        )}
         <div className={styles.orderModalButtons}>
           <button
             className={styles.orderModalClose}
