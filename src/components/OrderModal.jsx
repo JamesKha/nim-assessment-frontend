@@ -39,14 +39,14 @@ function OrderModal({ order, setOrderModal }) {
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name,
           phone,
           address,
-          items: order
-        })
+          items: order,
+        }),
       });
 
       if (response.ok) {
