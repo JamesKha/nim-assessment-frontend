@@ -1,0 +1,45 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.receipt {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #000;
+}
+
+h1 {
+  text-align: center;
+}
+
+.customer-info {
+  margin-top: 20px;
+}
+
+.customer-info p {
+  margin: 5px 0;
+}
+
+.ordered-items {
+  margin-top: 20px;
+}
+
+.ordered-items h2 {
+  margin-bottom: 10px;
+}
+
+.ordered-items ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.ordered-items li {
+  margin-bottom: 5px;
+}
+
+p strong {
+  font-weight: bold;
+}

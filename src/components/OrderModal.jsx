@@ -1,27 +1,40 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useHistory
 import styles from "./styles/OrderModal.module.css";
 
 function OrderModal({ order, setOrderModal }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const navigate = useNavigate();
 
   const placeOrder = async () => {
-    const response = await fetch("/api/orders", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        name,
-        phone,
-        address,
-        items: order
-      })
-    });
-    const data = await response.json();
-    console.log(data);
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name,
+          phone,
+          address,
+          items: order
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // console.log("Response data:", data);
+        navigate(`/order-confirmation/${data.id}`);
+      } else {
+        // console.error("Failed to place the order. Please try again.");
+      }
+    } catch (error) {
+      // console.error("An error occurred. Please try again later.");
+    }
   };
+
   return (
     <>
       <div
